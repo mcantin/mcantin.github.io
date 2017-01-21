@@ -1,3 +1,8 @@
 .image{
     margin: 10px auto;
 }
+.btn.active[data-active-class="active"] {
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+}
