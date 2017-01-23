@@ -83,9 +83,22 @@
     
     
     <div id="contact" class="tab-pane fade">
-        <div class="container">
-            <button class="btn btn-primary" onclick="emailme();"><span class="glyphicon glyphicon-envelope"> Email me</span></button>
+      <form action="http://formspree.io/wafflex@gmail.com">
+        <div class="contactform">          
+            <div class="form-group">
+              <label for="usr">Name:</label>
+              <input type="text" class="form-control" id="usr">
+            </div>
+            <div class="form-group">
+              <label for="comment">Comment:</label>
+              <textarea class="form-control" rows="5" id="comment"></textarea>
+              <br>
+              <button class="btn btn-success" onclick="sendForm();"><span class="glyphicon glyphicon-envelope"> Email me</span></button>
+            </div>
         </div>
+       </form>
+                   <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-envelope"> Email me</span></button>
+
     </div>
     <!-- /.container -->
 
