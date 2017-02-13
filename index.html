@@ -103,28 +103,60 @@
     <!-- Rotation webpart -->
     <div id="projects" class="tab-pane fade">
                     <div class="col-md-12 text-center">SharePoint rotation webpart:</div><br/>
-                    <div id="myCarousel" class="carousel slide" data-ride="carousel" style="height: 200px; width: 50%; margin: 0 auto; ">
-                  <!-- Indicators -->
+                    <div id="myCarousel" class="carousel slide vcenter" data-ride="carousel" data-interval="false" style="height: 200px; width: 50%; margin: auto; ">
+                  <!--                  
+
                   <ol class="carousel-indicators">
                     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                     <li data-target="#myCarousel" data-slide-to="1"></li>
                     <li data-target="#myCarousel" data-slide-to="2"></li>
                     <li data-target="#myCarousel" data-slide-to="3"></li>
-                  </ol>
+                  </ol>-->
 
                   <!-- Wrapper for slides -->
-                  <div class="carousel-inner " role="listbox">
-                    <div class="item active ">
-                      <div class="col-md-12 text-center"><h2>Announcement</h2></div>
+                  <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                      <div class="col-md-12 text-center"><h2><span class="glyphicon glyphicon-bullhorn"></span>  Announcement</h2>
+                        <div style="width: 40%; margin: auto" class="text-center"><p>The new office building is complete! Please contact Jerry at the helpdesk for information on moving your desk and office equipment. </p></div>
+                      </div>
                     </div>
                     <div class="item ">
-                      <div class="col-md-12 text-center"><h2>Upcoming Event</h2></div>
+                      <div class="col-md-12 text-center"><h2><span class="glyphicon glyphicon-calendar"></span>  Upcoming Event</h2></div>
+                      <div style="width: 40%; margin: auto" class="text-left">
+                           <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Event</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <th>2-6-2017</th>
+                                <td>Payday</td>
+                              </tr>
+                              <tr>
+                                <th>2-28-2017</th>
+                                <td>Mardi Gras Day</td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+
+                      </div>
+
                     </div>                  
                     <div class="item ">
-                      <div class="col-md-12 text-center"><h2>Polls and Surveys</h2></div>
+                      <div class="col-md-12 text-center"><h2><span class="glyphicon glyphicon-comment"></span>  Polls and Surveys</h2></div>
+                      <div style="width: 40%; margin: auto" class="text-center" id="heros">
+                        <h5>Who is your favorite superhero?</h5>
+                        <input type="radio" name="hero" value="Superman" />Superman<br/>
+                        <input type="radio" name="hero" value="Batman" /> Batman<br/>
+                        <input type="radio" name="hero" value="Spiderman" /> Spiderman<br/>    
+                      </div>
                     </div>
                     <div class="item ">
-                      <div class="col-md-12 text-center"><h2>Quick Information</h2></div>
+                      <div class="col-md-12 text-center"><h2><span class="glyphicon glyphicon-cloud"></span>  LOB Data</h2></div>
                     </div>                
                   </div>
 
