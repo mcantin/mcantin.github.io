@@ -1,4 +1,4 @@
-$('#topnav').load('/menu.html');
+//$('#topnav').load('/menu.html');
 
 $(document).ready(function(){
    $("#myCarousel").carousel();
