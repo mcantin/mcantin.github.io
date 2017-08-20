@@ -1,10 +1,7 @@
 //$('#topnav').load('/menu.html');
 
 $(document).ready(function(){
-   $("#myCarousel").carousel();
-/*    $(".item").click(function(){
-         $("#myCarousel").carousel(1);
-    });*/
+    $(".owl-carousel").owlCarousel();
 
     $("#heros").click(function(){
         $(this).html("<p>Thank you for voting!</p>");
