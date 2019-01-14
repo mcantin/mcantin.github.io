@@ -1,0 +1,154 @@
+<html>
+    <head>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script>
+         window.addEventListener("load", function(event) {
+            var app = new Vue({
+                    el: '#app',
+                    data: {
+                        welcomemessage: 'Welcome to Roulette!\n This was created with Vue',
+                        money: 5000,
+                        bets: []
+                    },
+                    methods:
+                    {
+                        selectsquare: function(event) {
+                            event.currentTarget.classList.add("activebet");  
+                            let squareValue = event.currentTarget.innerText; 
+                            var bet = app.bets.filter(function (b, index) {
+                                 return b.selection === squareValue;
+                            }); 
+                            if(bet.length === 0){
+                                app.bets.push({selection: squareValue, wage: 50}) 
+                            }  
+                            else{
+                                let newwage = bet[0].wage + 50;
+                                this.bets.find(bet => bet.selection === squareValue).wage = newwage;
+                            }         
+                            app.money -= 50;            
+                        },
+                        clearbets: function(event) {
+                            app.bets = [];  
+                            var tds = document.querySelectorAll("td.activebet");
+                            for (var i = 0; i < tds.length; i++) {
+                                tds[i].classList.remove("activebet");
+                            }                         
+                        },
+                        roll: function(event) {                            
+                            var selectedSquare = Math.floor(Math.random() * Math.floor(36)); //0 - 36
+                            alert("Ball landed on " + selectedSquare);
+                            determineWinnings(selectedSquare);
+                        },
+                        determineWinnings: function(selectedSquare){
+                            var isEven = selectedSquare % 2 == 0;
+                            var isOdd = selectedSquare % 2 == 1;
+                            var isFirst12 = (selectedSquare >= 1 && selectedSquare <= 12);
+                            var isSecond12 = (selectedSquare >= 13 && selectedSquare <= 24);
+                            var isThird12 = (selectedSquare >= 25 && selectedSquare <= 36)
+                        }                    
+                    }
+                });            
+         }); 
+            
+      </script>
+      <style>
+       tr, td {border: solid black;}
+       .activebet {
+        border-color: gold;
+       }
+       .empty {
+           visibility: hidden;
+       }
+       .roulettetable {
+           width: 50%;
+           height: 400px;
+       }
+       .roulettetable tr {
+        text-align: center
+       }
+       .red {
+        background-color: red;
+       }
+       .black {
+        background-color: black;
+       }
+       .green {
+        background-color: green;
+       }
+      </style>
+    </head>
+    <body>
+        <div id="app">
+                {{ welcomemessage }}
+                <table class='roulettetable'>
+                        <tbody>
+                        <tr>
+                            <td v-on:click="selectsquare" rowspan="3">0</td>
+                            <td v-on:click="selectsquare">3</td>
+                            <td v-on:click="selectsquare">6</td>
+                            <td v-on:click="selectsquare">9</td>
+                            <td v-on:click="selectsquare">12</td>
+                            <td v-on:click="selectsquare">15</td>
+                            <td v-on:click="selectsquare">18</td>
+                            <td v-on:click="selectsquare">21</td>
+                            <td v-on:click="selectsquare">24</td>
+                            <td v-on:click="selectsquare">27</td>
+                            <td v-on:click="selectsquare">30</td>
+                            <td v-on:click="selectsquare">33</td>
+                            <td v-on:click="selectsquare">36</td>
+                            <td v-on:click="selectsquare">2 to 1</td>
+                        </tr>
+                        <tr>                        
+                            <td v-on:click="selectsquare">2</td>
+                            <td v-on:click="selectsquare">5</td>
+                            <td v-on:click="selectsquare">8</td>
+                            <td v-on:click="selectsquare">11</td>
+                            <td v-on:click="selectsquare">14</td>
+                            <td v-on:click="selectsquare">17</td>
+                            <td v-on:click="selectsquare">20</td>
+                            <td v-on:click="selectsquare">23</td>
+                            <td v-on:click="selectsquare">26</td>
+                            <td v-on:click="selectsquare">29</td>
+                            <td v-on:click="selectsquare">32</td>
+                            <td v-on:click="selectsquare">35</td>
+                            <td v-on:click="selectsquare">2 to 1</td>
+                        </tr>
+                        <tr>
+                            <td v-on:click="selectsquare">1</td>
+                            <td v-on:click="selectsquare">4</td>
+                            <td v-on:click="selectsquare">7</td>
+                            <td v-on:click="selectsquare">10</td>
+                            <td v-on:click="selectsquare">13</td>
+                            <td v-on:click="selectsquare">16</td>
+                            <td v-on:click="selectsquare">19</td>
+                            <td v-on:click="selectsquare">22</td>
+                            <td v-on:click="selectsquare">25</td>
+                            <td v-on:click="selectsquare">28</td>
+                            <td v-on:click="selectsquare">31</td>
+                            <td v-on:click="selectsquare">34</td>
+                            <td v-on:click="selectsquare">2 to 1</td>
+                        </tr>
+                        <tr>
+                            <td class='empty'></td>
+                            <td  v-on:click="selectsquare"  colspan="4">1st 12</td>
+                            <td  v-on:click="selectsquare"  colspan="4">2nd 12</td>
+                            <td  v-on:click="selectsquare" style="width: 96.2px;" colspan="4">3rd 12</td>
+                        </tr>
+                        <tr>
+                            <td class='empty'></td>
+                            <td  v-on:click="selectsquare"  colspan="2">1 to 18</td>
+                            <td  v-on:click="selectsquare"  colspan="2">Even</td>
+                            <td  v-on:click="selectsquare"  colspan="2">Red</td>
+                            <td  v-on:click="selectsquare"  colspan="2">Black</td>
+                            <td  v-on:click="selectsquare"  colspan="2">Odd</td>
+                            <td  v-on:click="selectsquare"   colspan="2">19 to 36</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        <button v-on:click="clearbets">Clear Bets</button> | <button v-on:click="roll">Roll</button> | Cash: ${{money}}
+                        <ul>
+                           <li v-for="bet in bets">You selected {{bet.selection}} for ${{bet.wage}}</li>
+                        </ul>
+        </div>
+    </body>
+</html>
