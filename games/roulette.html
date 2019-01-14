@@ -92,18 +92,18 @@
                                     winningBetsMessage += 'You won ' +  (2 * betWager).toString() + ' for selecting ' + betSelection + '\n';  
                                }
                            });
-                           winningBetsMessage += "\n\n" + "Total won: " + moneywon;
-                               winningBetsMessage += "\n\n" + "Total bet: " + app.totalbet;
-                               let difference = (moneywon - app.totalbet);
-                               if(difference <= 0){
-                                winningBetsMessage += "\n\n" + "Net Loss: " + difference;
-                               }
-                               else{
-                                winningBetsMessage += "\n\n" + "Net Profit: " + difference;
-                               }
-                               app.money += difference;
-                               app.clearbets();
-                           alert(winningBetsMessage);
+                            winningBetsMessage += "\n\n" + "Total won: " + moneywon;
+                            winningBetsMessage += "\n\n" + "Total bet: " + app.totalbet;
+                            let difference = (moneywon - app.totalbet);
+                            if(difference <= 0){
+                            winningBetsMessage += "\n\n" + "Net Loss: " + difference;
+                            }
+                            else{
+                            winningBetsMessage += "\n\n" + "Net Profit: " + difference;
+                            }
+                            app.money += difference;
+                            app.clearbets();
+                            alert(winningBetsMessage);
 
                         }                    
                     }
