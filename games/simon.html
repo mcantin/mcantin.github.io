@@ -1,0 +1,247 @@
+<html>
+    <head>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script type="text/x-template" id="modal-template">
+        <transition name="modal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-container">
+      
+                <div class="modal-header">
+                  <slot name="header">
+                    default header
+                  </slot>
+                </div>
+      
+                <div class="modal-body">
+                  <slot name="body">                    
+                  </slot>
+                </div>
+      
+                <div class="modal-footer">
+                  <slot name="footer">
+                    <button class="modal-default-button" @click="$emit('close')">
+                      OK
+                    </button>
+                  </slot>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </script>
+      <script>
+         window.addEventListener("load", function(event) {
+            Vue.component('modal', {
+                template: '#modal-template'
+            })
+           var app = new Vue({
+                    el: '#app',
+                    data: {
+                        welcomemessage: 'Welcome to Simon!\n This was created with Vue',
+                        sequence: [],
+                        startTurn: false,
+                        activeColor: '',
+                        selectedSquares: [],  
+                        possibleChoices: ['green', 'yellow', 'red', 'blue'],
+                        score: 0,
+                        highscore: 0,                     
+                        showModal: false,
+                        right: true
+                    },
+                    methods:
+                    {
+                        selectsquare: function(event) {
+                            event.currentTarget.classList.add("active");  
+                            let squareColor = event.currentTarget.getAttribute("data-color");
+                            app.selectedSquares.push(squareColor);
+                            let isRight = app.sequence[app.selectedSquares.length-1] === squareColor;
+                            if(!isRight)
+                            {
+                                app.showModal = true;
+                                app.sequence = [];
+                                app.selectedSquares = [];
+                            }
+                            else{
+                                
+                                if(app.selectedSquares.length == app.sequence.length){
+                                this.getNextSquare();
+                                this.playSequence(); 
+                                app.selectedSquares = [];
+                                app.highscore += 1;
+                                }
+                            }
+                            
+                            //find color in sequence            
+                        },
+                        playSequence: function(event){   
+                            for (let i = 0; i < app.sequence.length; i++) {
+                                const square = app.sequence[i];
+                                var color = document.querySelector("td[data-color='" + square + "']");                               
+                                (function(i){
+                                    setTimeout(function(){                                        
+                                    }, 1000 * (i + 1));
+                                    setTimeout(function(){
+                                        app.activeColor = square;
+                                    }, 1000 * (i + 2));
+                                    setTimeout(function(){
+                                        app.activeColor = '';
+                                    }, 1000 * (i + 3));                                    
+                                })(i);                                                                
+                            }                                                    
+                        },
+                        getNextSquare: function(event){
+                            let roll = Math.floor(Math.random() * Math.floor(3)); //0 - 3 index
+                            let square = app.possibleChoices[roll];
+                            app.sequence.push(square);  
+                        },
+                        start: function(event){
+                            this.getNextSquare();  
+                            this.playSequence(); 
+                            app.startTurn = true;  
+                        },
+                        analyzeAnswer: function(event){
+                            
+                        }          
+                    }
+                });            
+         }); 
+            
+      </script>
+      <style>
+          .simontable{
+              width: 400px;
+              height: 400px;
+          }
+       tr, td {
+           border: solid black;
+          cursor: pointer;
+          color: white;
+           font-weight: bold;
+           font-size: 14pt;
+       }
+       td:hover
+       {
+           opacity: 0.1;
+       }
+       .activebet {
+        border-color: gold;
+       }
+       .empty {
+          visibility: hidden;
+       }
+       .roulettetable {
+           width: 50%;
+           height: 400px;
+       }
+       .roulettetable tr {
+        text-align: center
+       }
+       .highlight{
+           background-color: #000000 !important;
+       }
+       .red {
+        background-color: red;
+        border-top-right-radius: 10em;
+       }
+       .blue {
+        background-color: blue;
+        border-bottom-right-radius: 10em;
+       }
+       .green {
+        background-color: green;
+        border-top-left-radius: 10em;
+       }
+       .yellow {
+        background-color: yellow;
+        border-bottom-left-radius: 10em;
+       }
+       
+       .modal-mask {
+        position: fixed;
+        z-index: 9998;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        display: table;
+        transition: opacity .3s ease;
+        }
+
+        .modal-wrapper {
+        display: table-cell;
+        vertical-align: middle;
+        }
+
+        .modal-container {
+        width: 300px;
+        margin: 0px auto;
+        padding: 20px 30px;
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        transition: all .3s ease;
+        font-family: Helvetica, Arial, sans-serif;
+        }
+
+        .modal-header h3 {
+        margin-top: 0;
+        color: #42b983;
+        }
+
+        .modal-body {
+        margin: 20px 0;
+        }
+
+        .modal-default-button {
+        float: right;
+        }
+
+        /*
+        * The following styles are auto-applied to elements with
+        * transition="modal" when their visibility is toggled
+        * by Vue.js.
+        *
+        * You can easily play with the modal transition by editing
+        * these styles.
+        */
+
+        .modal-enter {
+        opacity: 0;
+        }
+
+        .modal-leave-active {
+        opacity: 0;
+        }
+
+        .modal-enter .modal-container,
+        .modal-leave-active .modal-container {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+        }
+      </style>
+    </head>
+    <body>
+        <div id="app">
+                {{ welcomemessage }}
+                <table class='simontable'>
+                        <tbody>
+                        <tr>
+                            <td v-bind:class="['green', (activeColor != 'green') ? '' : 'highlight']" data-color="green" v-on:click="selectsquare"></td>
+                            <td v-bind:class="['red', (activeColor != 'red') ? '' : 'highlight']" data-color="red" v-on:click="selectsquare"></td>
+                        </tr>
+                        <tr>                        
+                            <td v-bind:class="['yellow', (activeColor != 'yellow') ? '' : 'highlight']" data-color="yellow" v-on:click="selectsquare"></td>
+                            <td v-bind:class="['blue', (activeColor != 'blue') ? '' : 'highlight']" data-color="blue" v-on:click="selectsquare"></td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        <button v-on:click="start">Start</button> | highscore: {{highscore}}
+                        <modal v-if="showModal" @close="showModal = false">
+                                <div slot='body'>{{modalMessage}}</div>
+                            <h3 slot="header">Your Score: {{score}}</h3>                            
+                        </modal>
+        </div>
+    </body>
+</html>

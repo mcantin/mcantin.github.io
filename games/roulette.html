@@ -44,6 +44,7 @@
                         money: 5000,
                         totalbet: 0,
                         showModal: false,
+                        rollhistory: [],
                         bets: []
                     },
                     methods:
@@ -51,10 +52,8 @@
                         selectsquare: function(event) {
                             event.currentTarget.classList.add("activebet");  
                             let squareValue = event.currentTarget.innerText; 
-                           var bet = app.bets.filter(function (b, index) {
-                                 return b.selection === squareValue;
-                            }); 
-                            if(bet.length === 0){
+                            var bet = app.bets.find(bet => bet.selection === squareValue);
+                            if(!bet || bet.length === 0){
                                 app.bets.push({selection: squareValue, wage: 50}) 
                             }  
                             else{
@@ -64,28 +63,33 @@
                         },
                        clearbets: function(event) {
                             app.bets = [];  
-                           var tds = document.querySelectorAll("td.activebet");
-                            for (var i = 0; i < tds.length; i++) {
-                                tds[i].classList.remove("activebet");
-                            }    
-                            app.totalbet = 0;                     
+                            app.totalbet = 0;
+                            document.querySelectorAll("td.activebet").forEach(td => {td.classList.remove("activebet");});      
                         },
                         roll: function(event) {                            
                             app.selectedSquare = Math.floor(Math.random() * Math.floor(36)); //0 - 36                           
                             this.determineWinnings(app.selectedSquare);
                         },
                         determineWinnings: function(selectedSquare){
-                           var redSquares = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
-                           var blackSquares = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
-                           var isEven = selectedSquare % 2 == 0;
-                           var isOdd = selectedSquare % 2 == 1;
-                           var isFirst12 = (selectedSquare >= 1 && selectedSquare <= 12);
-                           var isSecond12 = (selectedSquare >= 13 && selectedSquare <= 24);
-                           var isThird12 = (selectedSquare >= 25 && selectedSquare <= 36);
-                           var is1to18 = (selectedSquare >= 1 && selectedSquare <= 18);
-                           var is19to36 = (selectedSquare >= 19 && selectedSquare <= 36);
-                           var isRed = redSquares.indexOf(selectedSquare) > -1;
-                           var isBlack = blackSquares.indexOf(selectedSquare) > -1;
+                            if(selectedSquare !== 0){
+                                var redSquares = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
+                                var blackSquares = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35];
+                                var isEven = selectedSquare % 2 == 0;
+                                var isOdd = selectedSquare % 2 == 1;
+                                var isFirst12 = (selectedSquare >= 1 && selectedSquare <= 12);
+                                var isSecond12 = (selectedSquare >= 13 && selectedSquare <= 24);
+                                var isThird12 = (selectedSquare >= 25 && selectedSquare <= 36);
+                                var is1to18 = (selectedSquare >= 1 && selectedSquare <= 18);
+                                var is19to36 = (selectedSquare >= 19 && selectedSquare <= 36);
+                                var isTopRow = selectedSquare % 3 == 0;
+                                var isMiddleRow = selectedSquare % 3 == 2;
+                                var isBottomRow = selectedSquare % 3 == 1;
+                                var isRed = redSquares.indexOf(selectedSquare) > -1;
+                                var isBlack = blackSquares.indexOf(selectedSquare) > -1;
+                                var winningColor = (isRed && !isBlack) ? 'red': 'black';
+                                winningColor = (!isRed && !isBlack) ? 'green': winningColor;
+                            }
+                          app.rollhistory.push({color: winningColor, number: selectedSquare });
                            var winningBetsMessage = '';                           
                            let moneywon = 0; 
                            app.bets.forEach(bet => {
@@ -125,22 +129,23 @@
                                     moneywon += 2 * betWager;
                                     winningBetsMessage += 'You won ' +  (2 * betWager).toString() + ' for selecting ' + betSelection + '\n';  
                                }
+                               if(betSelection == "Even" && isEven){
+                                    moneywon += 2 * betWager;
+                                    winningBetsMessage += 'You won ' +  (2 * betWager).toString() + ' for selecting ' + betSelection + '\n';  
+                               }
+                               if(betSelection == "Odd" && isOdd){
+                                    moneywon += 2 * betWager;
+                                    winningBetsMessage += 'You won ' +  (2 * betWager).toString() + ' for selecting ' + betSelection + '\n';  
+                               }
                            });
                             winningBetsMessage += "\n\n" + "Total won: " + moneywon;
                             winningBetsMessage += "\n\n" + "Total bet: " + app.totalbet;
-                            let difference = (moneywon - app.totalbet);
-                            if(difference <= 0){
-                            winningBetsMessage += "\n\n" + "Net Loss: " + difference;
-                            }
-                            else{
-                            winningBetsMessage += "\n\n" + "Net Profit: " + difference;
-                            }
-                            app.money += difference;
+                            winningBetsMessage += "\n\n" + "Net: " + (moneywon - app.totalbet);
+
+                            app.money += (moneywon - app.totalbet);
                             app.clearbets();
                             app.winningMessage = winningBetsMessage;
                             app.showModal = true;
-                            //alert(winningBetsMessage);
-
                         }                    
                     }
                 });            
@@ -158,6 +163,14 @@
        }
        .activebet {
         border-color: gold;
+       }
+       .rollhistory li
+       {
+         display: inline;
+         color: white;
+         font-size: 32px;
+         margin: 2;
+         padding: 5;
        }
        .empty {
           visibility: hidden;
@@ -317,8 +330,11 @@
                                 <div slot='body'>{{winningMessage}}</div>
                             <h3 slot="header">Ball landed on {{selectedSquare}}</h3>                            
                         </modal>
+                        <ul class="rollhistory">
+                            <li v-for="history in rollhistory" v-bind:class='history.color'>{{history.number}}</li>
+                        </ul> 
                         <ul>
-                           <li v-for="bet in bets">You selected {{bet.selection}} for ${{bet.wage}}</li>
+                           <li v-for="bet in bets" >You selected {{bet.selection}} for ${{bet.wage}}</li>
                         </ul>
         </div>
     </body>
